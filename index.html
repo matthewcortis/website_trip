@@ -543,8 +543,8 @@
 		<div class="overlay overlay-bg"></div>
 		<div class="container">
 			<div class="video-content">
-				<a href="https://www.youtube.com/watch?v=islIcqkqUdg&list=PLqNDyy0ulkWS9Zg2GUVAt1ZAotmbFlUdM" class="play-btn"><img src="img/play-btn.png"
-						alt=""></a>
+				<a href="https://www.youtube.com/watch?v=islIcqkqUdg&list=PLqNDyy0ulkWS9Zg2GUVAt1ZAotmbFlUdM"
+					class="play-btn"><img src="img/play-btn.png" alt=""></a>
 				<div class="video-desc">
 					<h3 class="h2 text-white text-uppercase">Hà nội, Thủ đô ngàn năm văn hiến</h3>
 					<h4 class="text-white">Youtube video will appear in popover</h4>
@@ -584,10 +584,12 @@
 							onblur="this.placeholder = 'Enter your name'" class="common-input mb-20 form-control"
 							required="" type="text">
 
-						<input name="email" placeholder="Enter email address"
-							pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" onfocus="this.placeholder = ''"
-							onblur="this.placeholder = 'Enter email address'" class="common-input mb-20 form-control"
-							required="" type="email">
+					
+						<input name="email" placeholder="Enter email or phone number" onfocus="this.placeholder=''"
+							onblur="this.placeholder='Enter email or phone number'"
+							class="common-input mb-20 form-control" required type="text"
+							pattern="^([0-9]{9,11}|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})$"
+							title="Please enter a valid email or phone number">
 
 						<input name="subject" placeholder="Enter your subject" onfocus="this.placeholder = ''"
 							onblur="this.placeholder = 'Enter your subject'" class="common-input mb-20 form-control"
@@ -620,8 +622,8 @@
 						</p>
 						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 						<p class="footer-text">Copyright &copy;
-							<script>document.write(new Date().getFullYear());</script> All rights reserved <i class="fa fa-heart-o" aria-hidden="true"></i> by <a
-								href="#" target="_blank">Trippin</a>
+							<script>document.write(new Date().getFullYear());</script> All rights reserved <i
+								class="fa fa-heart-o" aria-hidden="true"></i> by <a href="#" target="_blank">Trippin</a>
 						</p>
 						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 					</div>
@@ -675,6 +677,54 @@
 		</div>
 	</footer>
 	<!-- End footer Area -->
+	<script type="module">
+		// Import các SDK cần thiết
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+		import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+		// ⚙️ Cấu hình Firebase của bạn
+		const firebaseConfig = {
+			apiKey: "AIzaSyBJrGeQwgiq3os0jyHbZP5iZ70r-IElN5c",
+			authDomain: "projectapp-fba20.firebaseapp.com",
+			projectId: "projectapp-fba20",
+			storageBucket: "projectapp-fba20.firebasestorage.app",
+			messagingSenderId: "283137274595",
+			appId: "1:283137274595:web:5cdfe7011da1e8d6ac0bd6",
+			measurementId: "G-EJMWV4L4P4"
+		};
+
+		// 🚀 Khởi tạo Firebase App & Firestore
+		const app = initializeApp(firebaseConfig);
+		const db = getFirestore(app);
+
+		// 🧾 Bắt sự kiện khi người dùng gửi form
+		document.getElementById("myForm").addEventListener("submit", async (e) => {
+			e.preventDefault(); // Ngăn form reload trang
+
+			// Lấy dữ liệu từ các input
+			const name = e.target.name.value;
+			const email = e.target.email.value;
+			const subject = e.target.subject.value;
+			const message = e.target.message.value;
+
+			try {
+				// 💾 Gửi dữ liệu lên Firestore (collection "contacts")
+				await addDoc(collection(db, "contacts"), {
+					name,
+					email,
+					subject,
+					message,
+					createdAt: new Date()
+				});
+
+				alert("✅ Gửi thành công!");
+				e.target.reset();
+			} catch (error) {
+				console.error("❌ Lỗi khi gửi dữ liệu:", error);
+				alert("Gửi thất bại, vui lòng thử lại!");
+			}
+		});
+	</script>
 
 	<script src="js/vendor/jquery-2.2.4.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
@@ -689,7 +739,7 @@
 	<script src="js/jquery.counterup.min.js"></script>
 	<script src="js/waypoints.min.js"></script>
 	<script src="js/main.js"></script>
-	
+
 </body>
 
 </html>
